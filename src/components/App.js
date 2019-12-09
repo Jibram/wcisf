@@ -22,10 +22,22 @@ class App extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    console.log(this.state.char)
+  }
+
   updateName = (e) => {
     var player = this.state.player
     player.name = e.target.value
     this.setState({player:player})
+  }
+
+  createUser = async() => {
+    await axios.get('http://localhost:5000/createPlayer', {
+      params: {
+        player: this.state.player.name
+      }
+    })
   }
 
   signIn = async() => {
@@ -37,6 +49,42 @@ class App extends React.Component {
     let player = this.state.player
     player.id = res.data
     this.setState({player})
+  }
+
+  updateCharName = (e) => {
+    var char = this.state.char
+    char.name = e.target.value
+    this.setState({char:char})
+  }
+
+  updateCharLvl = (e) => {
+    var char = this.state.char
+    char.level = e.target.value
+    this.setState({char:char})
+  }
+
+  updateCharClass = (e) => {
+    var char = this.state.char
+    char.class = e.target.value
+    this.setState({char:char})
+  }
+
+  updateCharRace = (e) => {
+    var char = this.state.char
+    char.race = e.target.value
+    this.setState({char:char})
+  }
+
+  createChar = async() => {
+    await axios.get('http://localhost:5000/createCharacter', {
+      params: {
+        playerID: this.state.player.id,
+        charName: this.state.char.name,
+        lvl: this.state.char.level,
+        className: this.state.char.class,
+        race: this.state.char.race
+      }
+    })
   }
 
   charSelect = () => {
@@ -54,13 +102,13 @@ class App extends React.Component {
 
   viewSelect = () => {
     if (this.state.player.id === 0) {
-      return <SignInComponent updateName={this.updateName} signIn={this.signIn} playerName={this.state.player.name}/>
+      return <SignInComponent updateName={this.updateName} createUser={this.createUser} signIn={this.signIn} playerName={this.state.player.name}/>
     }
     else {
       return (
         <div>
           <h2>Welcome, {this.state.player.name}</h2>
-          <CharacterSelect playerID={this.state.player.id} handleCharSelect={this.charSelect}/>
+          <CharacterSelect playerID={this.state.player.id} handleCharSelect={this.charSelect} updateCharClass={this.updateCharClass} updateCharLvl={this.updateCharLvl} updateCharName={this.updateCharName} updateCharRace={this.updateCharRace} createChar={this.createChar}/>
           {this.state.char.id !== 0 ? <Character {...this.state.char}/> : ''}
           {this.state.char.id !== 0 ? <LearnedSpells charID={this.state.char.id}/> : ''}
           {this.state.char.id !== 0 ? <AvailableSpells charID={this.state.char.id} charClass={this.state.char.class}/> :""}

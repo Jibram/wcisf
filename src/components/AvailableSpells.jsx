@@ -3,7 +3,8 @@ import axios from 'axios';
 
 export default class AvailableSpells extends React.Component{
     state = {
-        spells: []
+        spells: [],
+        update: false
     }
 
     componentDidMount() {
@@ -16,21 +17,22 @@ export default class AvailableSpells extends React.Component{
         .then(res => this.setState({spells:res.data}));
     }
 
-    //TODO
     addSpell = async (e) => {
-        await axios.post('http://localhost:5000/addSpellToCharacter', {
-            data : {
+        console.log(this.props.charID, e.target.id)
+        await axios.get('http://localhost:5000/addSpellToCharacter', {
+            params : {
                 charID: this.props.charID,
-                spellID: 0 // NOT SURE HOW TO GET THIS
+                spellID: e.target.id
             }
         })
+        this.setState({update:!this.state.update})
     }
 
     populate = () => {
         var spells = []
         for (var i = 0; i < this.state.spells.length; i++) {
             spells.push(
-                <p>
+                <p key={this.state.spells[i][0]}>
                     {this.state.spells[i][1] + " "}
                     <button id={this.state.spells[i][0]} onClick={this.addSpell}>Add</button>
                 </p>     

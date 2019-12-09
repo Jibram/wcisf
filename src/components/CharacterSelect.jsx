@@ -21,7 +21,7 @@ export default class CharacterSelect extends React.Component {
         chars.push(<option>-Select-</option>)
         for (var i = 0; i < this.state.chars.length; i++) {
             chars.push(
-                <option value={this.state.chars[i]}>
+                <option key={this.state.chars[i][0]} value={this.state.chars[i]}>
                     {this.state.chars[i][1]}
                 </option>
             )
@@ -34,10 +34,20 @@ export default class CharacterSelect extends React.Component {
         return(
             <div>
                 <h3>Select a character</h3> 
-                <select class="select-css" id="charDropdown" onChange={this.props.handleCharSelect}>
+                <select className="select-css" id="charDropdown" onChange={this.props.handleCharSelect}>
                     {this.populate()}
                 </select>
+                <br/>
+                OR
+                <br/>
+                <h3>Create a character</h3>
+                <label>Name:<input onChange={this.props.updateCharName}></input></label><br/>
+                <label>Level:<input onChange={this.props.updateCharLvl}></input></label><br/>
+                <label>Class:<input onChange={this.props.updateCharClass}></input></label><br/>
+                <label>Race:<input onChange={this.props.updateCharRace}></input></label><br/>
+                <button onClick={this.props.createChar}>Create</button>
             </div>
+
         )
     }
 }

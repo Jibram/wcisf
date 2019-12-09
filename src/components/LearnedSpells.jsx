@@ -15,21 +15,29 @@ export default class LearnedSpells extends React.Component {
         .then(res => this.setState({spells:res.data}));
     }
 
-    //TODO
     deleteSpell = async (e) => {
+        let tempID = e.target.id
         await axios.delete('http://localhost:5000/removeSpellFromCharacter', {
-            data: {
+            params: {
                 charID: this.props.charID,
-                spellID: 0 // NOT SURE HOW TO GET THIS
+                spellID: tempID
             }
         })
+        let spells = this.state.spells
+        for (let i = 0; i < spells.length; i++) {
+            if (spells[i][1] === tempID){
+                delete spells[i]
+                break;
+            }
+        }
+        this.setState({spells})
     }
 
     populate = () => {
         var spells = []
         for (var i = 0; i < this.state.spells.length; i++) {
             spells.push(
-                <p>
+                <p key={this.state.spells[i][1]}>
                     {this.state.spells[i][2] + " "}
                     <button id={this.state.spells[i][1]} onClick={this.deleteSpell}>Delete</button>
                 </p>     
